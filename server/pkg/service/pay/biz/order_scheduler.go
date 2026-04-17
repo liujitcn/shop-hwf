@@ -1,0 +1,32 @@
+package biz
+
+import (
+	"go.newcapec.cn/ncttools/nmskit/log"
+	"sync"
+	"time"
+)
+
+type OrderSchedulerCase struct {
+	timers sync.Map // 存储订单ID和对应的定时器
+}
+
+func NewOrderSchedulerCase() *OrderSchedulerCase {
+	return &OrderSchedulerCase{}
+}
+
+func (s *OrderSchedulerCase) AddSchedule(orderId int64, d time.Duration, cancelFunc func()) {
+	log.Infof("order schedule add %d", orderId)
+	timer := time.AfterFunc(d, func() {
+		cancelFunc()
+		s.timers.Delete(orderId)
+	})
+	s.timers.Store(orderId, timer)
+}
+
+func (s *OrderSchedulerCase) DeleteScheduled(orderId int64) {
+	if timer, ok := s.timers.Load(orderId); ok {
+		timer.(*time.Timer).Stop()
+		log.Infof("order schedule delete %d", orderId)
+		s.timers.Delete(orderId)
+	}
+}

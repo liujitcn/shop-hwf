@@ -1,0 +1,10 @@
+oss:
+  type: local
+  local:
+    rootDirectory: ./data
+  aliyun:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    accessKeyId: <accessKeyId>
+    accessKeySecret: <accessKeySecret>
+    bucketName: mybaby0128
+    rootDirectory: ./data

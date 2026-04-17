@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  shop-service:
+    image: shop-service:latest
+    container_name: shop-service
+    restart: always
+    ports:
+      - "7001:7001"
+    volumes:
+      - /home/configs:/nct/configs
+      - /home/data:/nct/data
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - /home/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /home/nginx/conf.d:/etc/nginx/conf.d
+      - /home/nginx/html:/usr/share/nginx/html
+      - /home/nginx/logs:/var/log/nginx
+      - /home/nginx/cert:/etc/nginx/cert
+      - /home/data/shop:/home/data/shop
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/portainer_data:/data

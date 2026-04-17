@@ -1,0 +1,19 @@
+.idea/
+.vscode/
+
+# go相关
+*.sum
+*.exe
+
+# 前端相关
+node_modules/
+dist/
+package-lock.json
+
+/server/internal/service_tmp/
+/server/data/
+/server/configs/apiclient_key.pem
+/server/ShopService
+/server/shop-service.tar
+/web/dist.zip
+/server/configs/shop_local.yaml

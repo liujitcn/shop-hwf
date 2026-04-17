@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package config;
+
+option go_package = "gitee.com/liujit/shop/server/pkg/config;config";
+
+message ShopSection {
+  ShopConfig shopConfig = 1;
+}
+
+message ShopConfig {
+  WxMiniApp wxMiniApp = 1;
+  WxPay wxPay = 2; // 微信支付参数
+
+}
+
+message WxMiniApp {
+  string appid = 1;
+  string secret = 2;
+}
+
+message WxPay {
+  string appid = 1;
+  string mchId = 2; // 商户id
+  string notifyUrl = 3; // 通知地址
+
+  string mchCertSn = 80; // 商户证书序列号
+  string mchCertPath = 81; // 商户证书路径
+  string mchAPIv3Key = 82; // api 密钥
+}
+
+message PyroScope {
+  string ServerAddress = 1; // 服务地址
+}

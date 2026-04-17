@@ -1,0 +1,23 @@
+version: v2
+
+modules:
+  - path: proto
+    lint:
+      use:
+        - STANDARD
+    breaking:
+      use:
+        - FILE
+deps:
+  - 'buf.build/googleapis/googleapis'
+  - 'buf.build/liujun/nmskit'
+  - 'buf.build/gnostic/gnostic'
+  - 'buf.build/gogo/protobuf'
+
+breaking:
+  use:
+    - FILE
+
+lint:
+  use:
+    - DEFAULT

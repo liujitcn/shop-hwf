@@ -1,0 +1,13 @@
+shopConfig:
+  wxMiniApp:
+    appid: <appid>
+    secret: <secret>
+  wxPay:
+    appid: <appid>
+    mchId: <mchId>
+    notifyUrl: <notifyUrl>
+    mchCertSn: <mchCertPath>
+    mchCertPath: <mchCertPath>
+    mchAPIv3Key: <mchAPIv3Key>
+
+

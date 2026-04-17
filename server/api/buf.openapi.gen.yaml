@@ -1,0 +1,23 @@
+# 配置protoc生成规则
+version: v2
+
+clean: false
+
+managed:
+  enabled: true
+
+  disable:
+    - module: buf.build/googleapis/googleapis
+    - module: 'buf.build/envoyproxy/protoc-gen-validate'
+    - module: 'buf.build/gnostic/gnostic'
+    - module: 'buf.build/gogo/protobuf'
+    - module: 'buf.build/liujun/nmskit'
+
+plugins:
+  # generate openapi v3 yaml doc
+  - local: protoc-gen-openapi
+    out: ../cmd/assets
+    opt:
+      - naming=proto # 命名约定。使用"proto"则直接从proto文件传递名称。默认为：json
+      - fq_schema_naming=true # Schema的命名是否加上包名，为true，则会加上包名，例如：system.service.v1.ListDictDetailResponse，否则为：ListDictDetailResponse。默认为：false。
+    strategy: all # This tag will generate all files without split files in different directories.

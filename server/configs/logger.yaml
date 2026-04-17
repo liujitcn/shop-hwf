@@ -1,0 +1,41 @@
+logger:
+  type: ncap
+  ncap:
+    LogFilePath: ./data/logA    #日志存放目录
+    LogLevel: debug          #最低日志级别 DebugLevel Level = iota - 1,InfoLevel,WarnLevel,ErrorLevel
+    LogToConsole: true    #打印到控制台
+    FileSize: 50           #日志文件大小
+    MaxBackups: 10        #最大保留日志文件数量
+    MaxAge: 15            #日志文件保留天数
+    # 显示SQL操作到日志
+    SqlLogOpen: false
+    AccessLogOff: true
+
+  fluent:
+    endpoint: "tcp://localhost:24224"
+
+  zap:
+    level: "debug"
+    filename: "./logs/info.log"
+    max_size: 1
+    max_age: 30
+    max_backups: 5
+
+  logrus:
+    level: "debug"
+    formatter: "text"
+    timestamp_format: "2006-01-02 15:04:05"
+    disable_colors: false
+    disable_timestamp: false
+
+  aliyun:
+    endpoint: ""
+    project: ""
+    access_key: "<access_key>"
+    access_secret: "<access_secret>"
+
+  tencent:
+    endpoint: ""
+    topic_id:
+    access_key: "<access_key>"
+    access_secret: "<access_secret>"

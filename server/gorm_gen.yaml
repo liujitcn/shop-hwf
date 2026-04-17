@@ -1,0 +1,35 @@
+version: "0.1"
+database:
+  # consult[https://gorm.io/docs/connecting_to_the_database.html]"
+  dsn : "root:112233@tcp(127.0.0.1:3306)/shop?charset=utf8&parseTime=True&loc=Local&timeout=1000ms"
+  # input mysql or postgres or sqlite or sqlserver. consult[https://gorm.io/docs/connecting_to_the_database.html]
+  db  : "mysql"
+  # enter the required data table or leave it blank.You can input :
+  # tables  :
+  #   - orders
+  #   - users
+  #   - goods
+  tables  :
+  # only generate models (without query file)
+  onlyModel : false
+  # specify a directory for output
+  outPath :  "lib/data/query"
+  # query code file name, default: gen.go
+  outFile :  ""
+  # generate unit test for query code
+  withUnitTest  : false
+  # generated model code's package name
+  modelPkgName  : "models"
+  # generate with pointer when field is nullable
+  fieldNullable : false
+  # generate with pointer when field has default value
+  fieldCoverable : false
+  # generate field with gorm index tag
+  fieldWithIndexTag : true
+  # generate field with gorm column type tag
+  fieldWithTypeTag  : true
+  # detect integer field's unsigned type, adjust generated data type
+  fieldSignable  : false
+  modelOpts:
+    SingularTable: false
+    
