@@ -91,13 +91,23 @@ const state = reactive({
 
 const { rules } = toRefs(state);
 
+function ensurePropList() {
+  if (!Array.isArray(formData.value.propList)) {
+    formData.value.propList = [];
+  }
+}
+
 function handleAdd() {
+  ensurePropList();
   formData.value.propList.push({
+    label: "",
+    value: "",
     sort: 1,
   });
 }
 
 function handleRemove(index: number) {
+  ensurePropList();
   formData.value.propList.splice(index, 1);
 }
 

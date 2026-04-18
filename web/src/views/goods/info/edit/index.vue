@@ -27,6 +27,7 @@ import sku from "./components/sku.vue";
 import { GoodsForm } from "@/rpc/admin/goods";
 import type { GoodsProp } from "@/rpc/admin/goods_prop";
 import type { GoodsSpec } from "@/rpc/admin/goods_spec";
+import type { GoodsSku } from "@/rpc/admin/goods_sku";
 import { defGoodsService } from "@/api/admin/goods";
 import { GoodsStatus } from "@/rpc/common/enum";
 
@@ -41,69 +42,16 @@ const loading = ref(false);
 
 const goodsId = ref(route.query.goodsId as unknown as number);
 
-const propList = reactive<GoodsProp[]>([]);
-const skuList = reactive<any[]>([]);
-const specList = reactive<GoodsSpec[]>([]);
-const banner = reactive<string[]>([]);
-const detail = reactive<string[]>([]);
-
 const state = reactive({
   loaded: false,
   active: 0,
-  formData: {
-    /** 商品ID */
-    id: 0,
-    /** 分类ID */
-    categoryId: undefined,
-    /** 名称 */
-    name: "",
-    /** 描述 */
-    desc: "",
-    /** 商品图片 */
-    picture: "",
-    /** 轮播图 */
-    banner: banner,
-    /** 商品详情 */
-    detail: detail,
-    /** 状态 */
-    status: GoodsStatus.PUT_ON,
-    categoryName: "",
-    /** 商品属性 */
-    propList: propList,
-    /** 商品SKU */
-    skuList: skuList,
-    /** 商品规格 */
-    specList: specList,
-  } as GoodsForm,
+  formData: createDefaultFormData(),
 });
 
 const { loaded, active, formData } = toRefs(state);
 
-// 监听路由参数变化，更新商品属性
-watch(
-  () => [route.query.goodsId],
-  ([newGoodsId]) => {
-    goodsId.value = newGoodsId as unknown as number;
-    handleQuery();
-  }
-);
-
-function prev() {
-  if (state.active-- <= 0) {
-    state.active = 0;
-  }
-}
-function next() {
-  if (state.active++ >= 2) {
-    state.active = 0;
-  }
-}
-
-// 重置表单
-function resetForm() {
-  state.loaded = false;
-  state.active = 0;
-  state.formData = {
+function createDefaultFormData(): GoodsForm {
+  return {
     /** 商品ID */
     id: 0,
     /** 分类ID */
@@ -130,6 +78,45 @@ function resetForm() {
   };
 }
 
+function normalizeGoodsForm(data?: Partial<GoodsForm>): GoodsForm {
+  return {
+    ...createDefaultFormData(),
+    ...data,
+    banner: Array.isArray(data?.banner) ? data.banner : [],
+    detail: Array.isArray(data?.detail) ? data.detail : [],
+    propList: Array.isArray(data?.propList) ? data.propList : ([] as GoodsProp[]),
+    skuList: Array.isArray(data?.skuList) ? data.skuList : ([] as GoodsSku[]),
+    specList: Array.isArray(data?.specList) ? data.specList : ([] as GoodsSpec[]),
+  };
+}
+
+// 监听路由参数变化，更新商品属性
+watch(
+  () => [route.query.goodsId],
+  ([newGoodsId]) => {
+    goodsId.value = newGoodsId as unknown as number;
+    handleQuery();
+  }
+);
+
+function prev() {
+  if (state.active-- <= 0) {
+    state.active = 0;
+  }
+}
+function next() {
+  if (state.active++ >= 2) {
+    state.active = 0;
+  }
+}
+
+// 重置表单
+function resetForm() {
+  state.loaded = false;
+  state.active = 0;
+  state.formData = createDefaultFormData();
+}
+
 // 查询
 function handleQuery() {
   loading.value = true;
@@ -139,7 +126,8 @@ function handleQuery() {
         value: goodsId.value,
       })
       .then((data) => {
-        data.skuList.map((item) => {
+        const normalizedData = normalizeGoodsForm(data);
+        normalizedData.skuList.forEach((item) => {
           if (!item.initSaleNum) {
             item.initSaleNum = 0;
           }
@@ -158,20 +146,22 @@ function handleQuery() {
           }
           // 将规格项转换为对象属性
           const specItemObj: Record<string, string> = {};
-          item.specItem.forEach((spec, index) => {
+          const specItemList = Array.isArray(item.specItem) ? item.specItem : [];
+          specItemList.forEach((spec, index) => {
             specItemObj[`specItem${index}`] = spec;
           });
           // 使用类型断言合并规格项对象
           Object.assign(item, specItemObj);
           delete (item as any).specItem;
         });
-        state.formData = data;
+        state.formData = normalizedData;
         state.loaded = true;
       })
       .finally(() => {
         loading.value = false;
       });
   } else {
+    state.formData = createDefaultFormData();
     state.loaded = true;
     loading.value = false;
   }
